@@ -13,8 +13,8 @@
 
  ## Host machine requirements:
 	- The buildroot project (Tag: 2019.11.1) - Clone a clean repo from http://git.buildroot.net/buildroot/
-		(you can use the repo from the past labs, but make sure to clean it using the clean commands 
-		and remove the compiler cache from ~/.buildroot-cchace  to avoid any build problem)
+	  (you can use the repo from the past labs, but make sure to clean it using the clean commands 
+	   and remove the compiler cache from ~/.buildroot-cchace  to avoid any build problem)
 	- Network Connection to your laptop in case of a clean buildroot repo.
 	- A Raspberry Pi and your own SDcard.
 	- Your Prefered Hardware connection (Serial, Ethernet), we learned the basic concept for connecting via each one.
@@ -27,7 +27,7 @@
 		1.1.3- GSR_3 - The RPI Image shall have a shell prompt “MP3_Shell>”.
 		1.1.4- GSR_4 - The MP3 Player Shall be packaged firmly with no loose wires, buttons, battery or connectors.
 		1.1.5- GSR_5 - Any software built, Configuration used, or Scripts written shall be integrated in the
-				Buildroot system and the full image can be regenerated using only the "make" command.
+			       Buildroot system and the full image can be regenerated using only the "make" command.
 		1.1.6- GSR_6 - Any scripts, code, configuration delivered should be documented/commented out.	
 
 
@@ -41,7 +41,7 @@
 						the image Disk.
 			1.2.1.6- FSSR_6 - The MP3 Player shall not modify the content of any connected mass storage device.
 			1.2.1.7- FSSR_7 - The MP3 Player shall handle adding and removing of media devices while playing or
-							  pausing, Playing should not stop unless the media containing the file is removed.
+				          pausing, Playing should not stop unless the media containing the file is removed.
 
 
 		1.2.2- Feat2 "Manual Control of Music Player (Play/Pause, Next, Previous, Shuffle), either via Push Buttons and
@@ -69,12 +69,12 @@
 			1.2.3.6- FSSR_23 - The MP3 Player shall always try to connect to the nearest known bluetooth audio device.
 			1.2.3.7- FSSR_24 - The MP3 Player shall be able to pair with new Bluetooth audio devices.
 			1.2.3.8- FSSR_25 - When Bluetooth Speaker, HDMI TV Screen and 3.5mm wired speakers are connected at the 
-							  same time, The MP3 Player shall route the audio to the highest priority device 
-							  in the following order: Highest Priority: 1- bluetooth Speakers/headphones.
-													  				    2- HDMI.
-													  Lowest Priority:  3- Wired Speakers/headphones.
+					 same time, The MP3 Player shall route the audio to the highest priority device 
+					 in the following order: Highest Priority: 1- bluetooth Speakers/headphones.
+										   2- HDMI.
+								 Lowest Priority:  3- Wired Speakers/headphones.
 			1.2.3.9- FSSR_26 - The Mp3 Player shall handle connecting and disconnecting audio devices while playing or pausing, 
-							   Playing shall only stop if no audio device is connected.			
+					   Playing shall only stop if no audio device is connected.			
 
 
 		1.2.4- Feat4 "Streaming of the played music on the terminal (SSH terminal over Ethernet/Wifi, Serial terminal)."
