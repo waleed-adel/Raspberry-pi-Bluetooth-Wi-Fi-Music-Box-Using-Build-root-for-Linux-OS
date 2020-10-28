@@ -29,6 +29,7 @@
 	- 1.1.5- GSR_5 - Any software built, Configuration used, or Scripts written shall be integrated in the
 		       Buildroot system and the full image can be regenerated using only the "make" command.
 	- 1.1.6- GSR_6 - Any scripts, code, configuration delivered should be documented/commented out.	
+
 - 1.2- Feature-Specific System Requirements
 	- 1.2.1- Feat1 "Auto detection of mass-storage devices that can be connected via USB (e.g. Flash, Memory Card)."
 		- 1.2.1.1- FSSR_1 - The MP3 Player shall continuously check for new inserted mass storage devices.
