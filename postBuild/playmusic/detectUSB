@@ -1,0 +1,57 @@
+#!/bin/bash
+
+counter=0
+search1=0
+search2=0
+USBFlag=0
+
+if [ ! -f /root/superMusic/somethingChanged.conf ] ; then # check if flag file has created before
+    touch /root/superMusic/somethingChanged.conf
+    chmod 777 /root/superMusic/somethingChanged.conf
+    echo "FLAG=0" > /root/superMusic/somethingChanged.conf
+fi
+
+while true; do
+   sleep 1
+   search=$(find /dev/ -name "sd*")
+   if  [[  -z $search  ]] ; then # no USB found
+       if [[  $USBFlag  -eq 1 ]] ; then # and if there was a USB device previously connected
+           # indicate a change to the music player daemon
+           echo "FLAG=1" >  /root/superMusic/somethingChanged.conf
+           USBFlag=0 # reset flag
+           espeak "Mass Storage device is disconnected" --stdout | aplay 2>/dev/null
+       fi
+   else # something is connected
+       if [  $counter -eq 1 ] ; then
+           counter=0
+           search1=$search
+       else
+           counter=1
+           search2=$search
+       fi
+       
+       if ! [  "$search1" = "$search2"  ] ; then # a change happened
+           partitions="$(fdisk -l /dev/sd* | grep -v 'Unknown' | grep -v 'Empty' | awk '/\/dev\/sd/ {print $2}' | sed 's/.$//' | grep '/dev')"
+          for partition in $partitions; do
+             echo "iteration partition = $partition"
+             mountpoint="/media/$(basename $partition)"
+             mkdir -p "$mountpoint"
+             err=1
+             mount -r "$partition" "$mountpoint" 2>/dev/null && err=0
+             if [ $err -eq 1 ] ; then # if mounting failed then get next partition
+               continue
+             fi
+             echo "FLAG=1" > /root/superMusic/somethingChanged.conf
+             USBFlag=1 # indicate that a new USB device is connected
+             no_of_songs_media=$(sudo find $mountpoint -name "*.mp3" | wc -l)
+             size="$(fdisk -l "$partition" | grep -v 'Unknown' | grep -v 'Empty' | awk '/\/dev\/sd/ {print $5}')"
+             size=$[ $size / (1024*1024) ] # Bytes to MB
+             wall -n "Detected device $partition with size = $size MB"
+             echo "mounted $partition on $mountpoint"
+             espeak "Mass Storage device connected, size is $size megabytes, mp3 files equal $no_of_songs_media" --stdout | aplay 2>/dev/null
+          done
+       fi
+   fi
+done
+
+

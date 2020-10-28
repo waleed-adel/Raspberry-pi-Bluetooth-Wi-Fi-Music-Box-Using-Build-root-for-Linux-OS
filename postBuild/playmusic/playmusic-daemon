@@ -1,0 +1,171 @@
+#!/bin/bash
+
+set -e
+
+PLAYER="/"
+test -d ${PLAYER} || exit 1
+
+i=0
+curser=0
+button_state=0
+FirstTimeFlag=0
+PlayingFlag=0
+
+creatingarray(){
+   i=0
+   curser=0
+   button_state=0
+   FirstTimeFlag=0
+   PlayingFlag=0
+   arr=()
+   while IFS= read -r var
+   do 
+     i=$[ $i +1 ]
+     arr+=($var)
+   done <<< $(find $PLAYER -iname "*mp3") 
+   Max=$[$i -1]
+   Min=0
+}
+
+creatingarray
+
+# play/stop
+if [ ! -d /sys/class/gpio/gpio4 ] ; then # check if export process has done before
+    echo "4" > /sys/class/gpio/export
+    echo "in" > /sys/class/gpio/gpio4/direction
+fi
+# next
+if [ ! -d /sys/class/gpio/gpio17 ] ; then # check if export process has done before
+    echo "17" > /sys/class/gpio/export
+    echo "in" > /sys/class/gpio/gpio17/direction
+fi
+# previous
+if [ ! -d /sys/class/gpio/gpio18 ] ; then # check if export process has done before
+    echo "18" > /sys/class/gpio/export
+    echo "in" > /sys/class/gpio/gpio18/direction
+fi
+# shuffle
+if [ ! -d /sys/class/gpio/gpio27 ] ; then # check if export process has done before
+    echo "27" > /sys/class/gpio/export
+    echo "in" > /sys/class/gpio/gpio27/direction
+fi
+
+if [ ! -f  /root/superMusic/somethingChanged.conf ] ; then # check if not exists
+    echo "FLAG=0" > /root/superMusic/somethingChanged.conf
+    chmod 777 /root/superMusic/somethingChanged.conf
+fi
+
+# next/previous/shuffle buttons alternative (alias) for commandline
+echo 0 > /root/superMusic/somethingChanged2
+
+counter=0
+
+while true; do
+  counter=$[ $counter +1 ]
+  if [ $counter -gt 300 ] ; then
+     counter=0
+    if [ -z "$arr" ] ; then
+        echo "No .MP3 files found"
+        wall -n "No .MP3 files found"
+     elif [  $FirstTimeFlag -eq 0 ] ; then
+        echo "MP3 Stopped"
+        wall -n "MP3 Stopped"
+    elif [ $PlayingFlag -eq 0 ] ; then
+        echo "MP3 Paused > ${arr[$curser]}"
+        wall -n "MP3 Paused > ${arr[$curser]}"
+    else
+        echo "MP3 Playing > ${arr[$curser]}"
+        wall -n "MP3 Playing > ${arr[$curser]}"
+    fi
+  fi
+
+  # read the flag on the USB detection script
+  source /root/superMusic/somethingChanged.conf
+
+  # if a change happened in the USB detection daemon
+  if [[  $FLAG -eq 1  ]] ; then
+    # recreate the mp3 files list/array
+    creatingarray
+    # reset the flag
+    echo "FLAG=0" > /root/superMusic/somethingChanged.conf
+  fi
+
+  # get cmdline input
+  cmdlineAction=$(cat /root/superMusic/somethingChanged2)
+
+  if [ $(cat /sys/class/gpio/gpio4/value) -eq 1 ] || [ $cmdlineAction -eq 1 ] ; then #play/pause
+    # reset cmdline flag
+    echo 0 > /root/superMusic/somethingChanged2
+    #toggle button state
+    if [ $FirstTimeFlag -eq 0 ] ; then
+      if ! [ -z "$arr" ] ; then
+         mpg123 ${arr[@]:$curser} &
+         FirstTimeFlag=1
+         button_state=1
+         PlayingFlag=1
+      fi
+      sleep 0.5
+      continue
+    fi
+    if [ $button_state -eq 0 ]
+      then
+      killall -CONT mpg123
+      PlayingFlag=1
+      button_state=1
+      sleep 0.4
+    elif [ $button_state -eq 1 ]
+    then
+      killall -STOP  mpg123
+      PlayingFlag=0
+      button_state=0
+      sleep 0.4 # to allow finger release
+    fi
+  fi
+
+  if [ $(cat /sys/class/gpio/gpio17/value) -eq 1 ] || [ $cmdlineAction -eq 2 ] ; then #next
+     # reset cmdline flag
+     echo 0 > /root/superMusic/somethingChanged2
+     if [ $PlayingFlag -eq 1 ] ; then
+      if [ $curser -lt $Max ] ; then
+        curser=$[ $curser +1 ]
+      else #circular play
+        curser=$Min
+      fi
+      if ! [ -z "$arr" ] ; then
+         sudo killall -KILL mpg123
+         sleep 0.5
+         mpg123 ${arr[@]:$curser} &
+      fi
+     fi
+  fi
+
+  if [ $(cat /sys/class/gpio/gpio18/value) -eq 1 ] || [ $cmdlineAction -eq 3 ] ; then #previous
+     # reset cmdline flag
+     echo 0 > /root/superMusic/somethingChanged2
+     if [ $PlayingFlag -eq 1 ] ; then
+      if [ $curser -gt $Min ] ; then
+        curser=$[ $curser -1 ]
+      else #circular play
+        curser=$Max
+      fi
+      if ! [ -z "$arr" ] ; then
+         sudo killall -KILL mpg123 
+         sleep 0.5
+         mpg123 ${arr[@]:$curser} &
+      fi
+     fi
+  fi 
+
+  if [ $(cat /sys/class/gpio/gpio27/value) -eq 1 ] || [ $cmdlineAction -eq 4 ] ; then #shuffle
+     # reset cmdline flag
+     echo 0 > /root/superMusic/somethingChanged2
+     if ! [ -z "$arr" ] ; then
+         sudo killall -KILL mpg123 
+         sleep 0.5
+         mpg123 -z ${arr[@]} &
+     fi
+  fi
+
+done
+
+
