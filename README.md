@@ -1,5 +1,5 @@
 # Raspberry-pi-Bluetooth-Wi-Fi-Music-Box-Using-Build-root-for-Linux-OS
- ##Summary:
+ ## Summary:
 	This assignment is part of an assignment-series aimed to develop a functional Mp3 player reproducible by buildroot (without any manual modifications after the build) using all the knowledge and tools we got so far in the course and with Extra help from the Open source community of linux.
 	Main Features of desired MP3 Player:
 		- Auto detection of mass-storage devices that can be connected via USB (e.g. Flash, USB-HDD, Memory Card).
@@ -10,7 +10,7 @@
 	The stages concept has been replaced with Features concept for easier splitting of the task and tracking of work.
 
 
- ##Host machine requirements:
+ ## Host machine requirements:
 	- The buildroot project (Tag: 2019.11.1) - Clone a clean repo from http://git.buildroot.net/buildroot/
 		(you can use the repo from the past labs, but make sure to clean it using the clean commands 
 		and remove the compiler cache from ~/.buildroot-cchace  to avoid any build problem)
@@ -19,7 +19,7 @@
 	- Your Prefered Hardware connection (Serial, Ethernet), we learned the basic concept for connecting via each one.
 
 
- ##System Requirements:
+ ## System Requirements:
 1.1- Generic System Requirements
 	1.1.1- GSR_1 - The RPI Image shall have one user “root” with password “12345”.
 	1.1.2- GSR_2 - The RPI Image shall use glibc as the default C-Library.
