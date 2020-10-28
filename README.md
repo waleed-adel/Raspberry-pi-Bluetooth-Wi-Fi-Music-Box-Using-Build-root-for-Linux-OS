@@ -1,13 +1,13 @@
 # Raspberry-pi-Bluetooth-Wi-Fi-Music-Box-Using-Build-root-for-Linux-OS
  ## Summary:
-	This assignment is part of an assignment-series aimed to develop a functional Mp3 player reproducible by buildroot (without any manual modifications after the build) using all the knowledge and tools we got so far in the course and with Extra help from the Open source community of linux.
-	Main Features of desired MP3 Player:
-		- Auto detection of mass-storage devices that can be connected via USB (e.g. Flash, USB-HDD, Memory Card).
-		- Manual Control of Music Player (Play/Pause, Skip, Rewind, Shuffle), either via Push Buttons or Keyboard Commands.
-		- Ability to play music on different output devices(3.5mm Audio Jack, Bluetooth Audio, HDMI).
-		- Streaming of the currently played music on the terminal (SSH terminal over Ethernet/Wifi, Serial terminal).
-		- Audio Notifications about System changes (e.g. Inserting/removing storage/audio devices).
-	The stages concept has been replaced with Features concept for easier splitting of the task and tracking of work.
+	- This assignment is part of an assignment-series aimed to develop a functional Mp3 player reproducible by buildroot (without any manual modifications after the build) using all the knowledge and tools we got so far in the course and with Extra help from the Open source community of linux.
+	- Main Features of desired MP3 Player:
+		1) Auto detection of mass-storage devices that can be connected via USB (e.g. Flash, USB-HDD, Memory Card).
+		2) Manual Control of Music Player (Play/Pause, Skip, Rewind, Shuffle), either via Push Buttons or Keyboard Commands.
+		3) Ability to play music on different output devices(3.5mm Audio Jack, Bluetooth Audio, HDMI).
+		4) Streaming of the currently played music on the terminal (SSH terminal over Ethernet/Wifi, Serial terminal).
+		5) Audio Notifications about System changes (e.g. Inserting/removing storage/audio devices).
+	- The stages concept has been replaced with Features concept for easier splitting of the task and tracking of work.
 
 
  ## Host machine requirements:
@@ -20,7 +20,7 @@
 
 
  ## System Requirements:
-1.1- Generic System Requirements
+	1.1- Generic System Requirements
 	1.1.1- GSR_1 - The RPI Image shall have one user “root” with password “12345”.
 	1.1.2- GSR_2 - The RPI Image shall use glibc as the default C-Library.
 	1.1.3- GSR_3 - The RPI Image shall have a shell prompt “MP3_Shell>”.
@@ -30,7 +30,7 @@
 	1.1.6- GSR_6 - Any scripts, code, configuration delivered should be documented/commented out.	
 
 
-1.2- Feature-Specific System Requirements
+	1.2- Feature-Specific System Requirements
 	1.2.1- Feat1 "Auto detection of mass-storage devices that can be connected via USB (e.g. Flash, Memory Card)."
 		1.2.1.1- FSSR_1 - The MP3 Player shall continuously check for new inserted mass storage devices.
 		1.2.1.2- FSSR_2 - The MP3 Player shall keep track of all .MP3 files available on any storage media.
